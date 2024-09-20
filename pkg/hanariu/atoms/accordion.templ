@@ -1,0 +1,20 @@
+package hanariu
+
+type AccordionBosons struct {
+	Collapse bool
+}
+
+templ Accordion(props *AccordionBosons) {
+	if props.Collapse {
+		<div class="divide-y divide-secondary-300 dark:divide-primary-400/20">
+			{ children... }
+		</div>
+	} else {
+		<div
+			class="divide-y divide-secondary-300 dark:divide-primary-400/20"
+			data-x-data="{selected: 1}"
+		>
+			{ children... }
+		</div>
+	}
+}

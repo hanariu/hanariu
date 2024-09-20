@@ -1,0 +1,27 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+)
+
+type FormCheckboxBosons struct {
+	Error   bool
+	Checked bool
+	Attrs   hanariu.Attrs
+}
+
+templ FormCheckbox(props *FormCheckboxBosons) {
+	<div class="flex items-top gap-3">
+		@protons.Checkbox(&protons.CheckboxBosons{Attrs: getFormCheckboxAttrs(props), Error: props.Error})
+		{ children... }
+	</div>
+}
+
+func getFormCheckboxAttrs(props *FormCheckboxBosons) hanariu.Attrs {
+	attrs := props.Attrs
+	if props.Checked {
+		attrs["checked"] = ""
+	}
+	return attrs
+}

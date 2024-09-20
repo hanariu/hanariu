@@ -1,0 +1,180 @@
+package hanariu
+
+import (
+	hanariu "github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type IconHeroBosons struct {
+	Size        string `default:"md"`
+	Color       string `default:"primary"`
+	Outline     bool
+	Transparent bool
+	Noborder    bool
+	Square      bool
+	ViewBox     string `default:"0 0 32 32"`
+	Attrs       hanariu.Attrs
+}
+
+var iconHeroStyles = hanariu.Boson{
+	"default":     "relative flex justify-center items-center",
+	"icon":        "h-2/3 w-2/3 block",
+	"iconOutline": "h-3/5 w-3/5 block",
+	"transparent": "bg-transparent",
+}
+
+var iconHeroColorStyles = hanariu.Boson{
+	"current":   "text-current/80",
+	"primary":   "text-primary-600/80 dark:text-primary-400",
+	"secondary": "text-secondary-600/80 dark:text-secondary-400",
+	"warning":   "text-warning-600/80 dark:text-warning-400",
+	"danger":    "text-danger-600/80 dark:text-danger-400",
+	"success":   "text-success-600/80 dark:text-success-400",
+	"info":      "text-info-600/80 dark:text-info-400",
+}
+
+var iconHeroColorBgStyles = hanariu.Boson{
+	"current":   "bg-current",
+	"primary":   "bg-primary-100 dark:bg-primary-600/80",
+	"secondary": "bg-secondary-100 dark:bg-secondary-600",
+	"warning":   "bg-warning-100 dark:bg-warning-600",
+	"danger":    "bg-danger-100 dark:bg-danger-600",
+	"success":   "bg-success-100 dark:bg-success-600",
+	"info":      "bg-info-100 dark:bg-info-600",
+}
+
+var iconHeroColorBorderStyles = hanariu.Boson{
+	"current":   "outline-current",
+	"primary":   "outline-primary-50 dark:outline-primary-600/40",
+	"secondary": "outline-secondary-50 dark:outline-secondary-600/40",
+	"warning":   "outline-warning-50 dark:outline-warning-600/40",
+	"danger":    "outline-danger-50 dark:outline-danger-600/40",
+	"success":   "outline-success-50 dark:outline-success-600/40",
+	"info":      "outline-info-50 dark:outline-info-600/40",
+}
+
+var iconHeroOutlineStyles = hanariu.Boson{
+	"current":   "text-current/80",
+	"primary":   "text-primary-600/80 dark:text-primary-300/80",
+	"secondary": "text-secondary-600/80 dark:text-secondary-300/80",
+	"warning":   "text-warning-600/80 dark:text-warning-300/80",
+	"danger":    "text-danger-600/80 dark:text-danger-300/80",
+	"success":   "text-success-600/80 dark:text-success-300/80",
+	"info":      "text-info-600/80 dark:text-info-300/80",
+}
+
+var iconHeroOutlineBgStyles = hanariu.Boson{
+	"current":   "bg-current/20",
+	"primary":   "bg-primary-200/20 dark:bg-primary-600/80",
+	"secondary": "bg-secondary-200/20 dark:bg-secondary-600/80",
+	"warning":   "bg-warning-200/20 dark:bg-warning-600/80",
+	"danger":    "bg-danger-200/20 dark:bg-danger-600/80",
+	"success":   "bg-success-200/20 dark:bg-success-600/80",
+	"info":      "bg-info-200/20 dark:bg-info-600/80",
+}
+
+var iconHeroOutlineBorderStyles = hanariu.Boson{
+	"current":   "border-current/20",
+	"primary":   "border-primary-300/20 dark:border-primary-500/20",
+	"secondary": "border-secondary-300/20 dark:border-secondary-500/20",
+	"warning":   "border-warning-300/20 dark:border-warning-500/20",
+	"danger":    "border-danger-300/20 dark:border-danger-500/20",
+	"success":   "border-success-300/20 dark:border-success-500/20",
+	"info":      "border-info-300/20 dark:border-info-500/20",
+}
+
+var iconHeroBorderStyles = hanariu.Boson{
+	"xs":      "outline-[4px]",
+	"sm":      "outline-[6px]",
+	"md":      "outline-[8px]",
+	"lg":      "outline-[10px]",
+	"xl":      "outline-[12px]",
+	"outline": "outline",
+	"border":  "border",
+	"full":    "rounded-full",
+	"square":  "rounded-md",
+}
+
+var iconHeroSizeStyles = hanariu.Boson{
+	"full": "w-full h-full ",
+	"xs":   "w-6 h-6 m-1",
+	"sm":   "w-8 h-8 m-1",
+	"md":   "w-10 h-10 m-1",
+	"lg":   "w-12 h-12 m-2",
+	"xl":   "w-16 h-16 m-2",
+}
+
+var iconHeroOutlineSizeStyles = hanariu.Boson{
+	"full": "w-full h-full ",
+	"xs":   "w-8 h-8",
+	"sm":   "w-10 h-10",
+	"md":   "w-12 h-12",
+	"lg":   "w-16 h-16",
+	"xl":   "w-20 h-20",
+}
+
+templ IconHero(props *IconHeroBosons) {
+	<div class={ getIconHeroDivClasses(props.Size, props.Color, props.Outline, props.Transparent, props.Noborder, props.Square) }>
+		<span class={ getIconHeroSpanClasses(props.Outline) }>
+			@getIconHero(props) {
+				{ children... }
+			}
+		</span>
+	</div>
+}
+
+func getIconHeroDivClasses(size string, color string, outline bool, transparent bool, noborder bool, square bool) string {
+	propsSize := hanariu.GetTagDefault("Size", size, IconHeroBosons{})
+	propsColor := hanariu.GetTagDefault("Color", color, IconHeroBosons{})
+	var classes = iconHeroStyles["default"] + " " + iconHeroColorStyles[propsColor]
+	if outline {
+		classes += " " + iconHeroOutlineSizeStyles[propsSize] + " " + iconHeroOutlineStyles[propsColor] + " " + iconHeroBorderStyles["border"]
+	} else {
+		classes += " " + iconHeroSizeStyles[propsSize] + " " + iconHeroColorStyles[propsColor] + " " + iconHeroBorderStyles["outline"] + " " + iconHeroBorderStyles[propsSize]
+	}
+
+	if !noborder {
+		if square {
+			classes += " " + iconHeroBorderStyles["square"]
+		} else {
+			classes += " " + iconHeroBorderStyles["full"]
+		}
+		if outline {
+			classes += " " + iconHeroOutlineBorderStyles[propsColor]
+
+		} else {
+			classes += " " + iconHeroColorBorderStyles[propsColor]
+		}
+	}
+
+	if transparent {
+		classes += " " + iconHeroStyles["transparent"]
+	} else {
+		if outline {
+			classes += " " + iconHeroOutlineBgStyles[propsColor]
+		} else {
+			classes += " " + iconHeroColorBgStyles[propsColor]
+		}
+	}
+
+	return classes
+}
+
+func getIconHeroSpanClasses(outline bool) string {
+	if outline {
+		return iconHeroStyles["iconOutline"]
+	} else {
+		return iconHeroStyles["icon"]
+	}
+}
+
+func getIconHero(props *IconHeroBosons) templ.Component {
+	classes := getIconHeroIconClasses()
+	attrs := make(hanariu.Attrs)
+	attrs["viewbox"] = hanariu.GetTagDefault("ViewBox", props.ViewBox, IconButtonBosons{})
+	return hanariu.CreateComponent("svg", classes, attrs, false)
+}
+
+func getIconHeroIconClasses() string {
+	var classes = "fill-current w-full h-full"
+	return classes
+}

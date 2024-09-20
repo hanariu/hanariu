@@ -1,0 +1,40 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type PopoverBosons struct {
+	Id        string `default:"popover"`
+	Placement string `default:"top"`
+	Offset    string `default:"10"`
+}
+
+templ Popover(props *PopoverBosons) {
+	@popoverContent(props) {
+		<div class="border-0 bg-white dark:bg-primary-900 rounded-md z-30">
+			{ children... }
+		</div>
+		<div data-arrow="arrow" class="absolute h-2 w-2 rotate-45 bg-white border-secondary-200/75 dark:bg-primary-900 dark:border-primary-950/40"></div>
+	}
+}
+
+func popoverContent(props *PopoverBosons) templ.Component {
+	attrs := make(hanariu.Attrs)
+
+	var bind = "{['data-x-transition:enter']: 'transition transform-cpu ease-out duration-100',['data-x-transition:enter-start']: 'transition transform-cpu opacity-0 scale-95',['data-x-transition:enter-end']: 'transition transform-cpu opacity-100 scale-100',['data-x-transition:leave']: 'transition transform-cpu ease-in duration-75',['data-x-transition:leave-start']: 'transition transform-cpu opacity-100 scale-100',['data-x-transition:leave-end']: 'transition transform-cpu opacity-0 scale-95'"
+	bind += "}"
+	attrs["data-x-cloak"] = ""
+	attrs["data-x-show"] = "hoverCardHovered"
+	idProp := hanariu.GetTagDefault("Id", props.Id, PopoverBosons{})
+	placementProp := hanariu.GetTagDefault("Placement", props.Placement, PopoverBosons{})
+	offsetProp := hanariu.GetTagDefault("Offset", props.Offset, PopoverBosons{})
+
+	var anchor = "data-x-anchor." + placementProp + ".offset." + offsetProp
+	attrs[anchor] = "$refs." + idProp
+	attrs["data-x-bind"] = bind
+
+	class := "absolute z-40 border rounded-md shadow-md w-max bg-white border-secondary-200/75 dark:bg-primary-900 dark:border-primary-950/40"
+
+	return hanariu.CreateComponent("div", class, attrs, false)
+}

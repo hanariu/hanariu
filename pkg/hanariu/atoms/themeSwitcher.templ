@@ -1,0 +1,73 @@
+package hanariu
+
+import (
+	icons "github.com/hanariu/hanariu/pkg/hanariu/icons"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+var themeSwitcherStyles = hanariu.Boson{
+	"default": "hover:cursor-pointer dark:text-white",
+}
+
+var themeSwitcherSizeStyles = hanariu.Boson{
+	"xs": "w-4 h-4",
+	"sm": "w-6 h-6",
+	"md": "w-8 h-8",
+	"lg": "w-10 h-10",
+	"xl": "w-12 h-12",
+}
+
+type ThemeSwitcherBosons struct {
+	Size  string `default:"md"`
+	Attrs hanariu.Attrs
+}
+
+func (attr *ThemeSwitcherBosons) makeThemeSwitcherAttrs() {
+	attrs := make(hanariu.Attrs)
+	for k, v := range attr.Attrs {
+		attrs[k] = v
+	}
+	attr.Attrs = attrs
+}
+
+func ThemeSwitcherBtn(props *ThemeSwitcherBosons) templ.Component {
+	props.Size = hanariu.GetTagDefault("Size", props.Size, ThemeSwitcherBosons{})
+	props.makeThemeSwitcherAttrs()
+	classes := getThemeSwitcherClasses(props)
+	return hanariu.CreateComponent("div", classes, props.Attrs, false)
+}
+
+templ ThemeSwitcher(props *ThemeSwitcherBosons) {
+	@ThemeSwitcherBtn(&ThemeSwitcherBosons{
+		Size: props.Size,
+		Attrs: hanariu.Attrs{
+			"data-x-data":  "",
+			"data-x-cloak": "",
+			"data-x-bind":  "{ 'data-x-on:click'() { $store.darkMode.toggle() } }",
+		},
+	}) {
+		@protons.Icon(&protons.IconBosons{
+			Color: "current",
+			Size:  "full",
+			Attrs: hanariu.Attrs{
+				"data-x-show": "$store.darkMode.on === 'dark'",
+			},
+		}) {
+			@icons.IconMoon()
+		}
+		@protons.Icon(&protons.IconBosons{
+			Color: "current",
+			Size:  "full",
+			Attrs: hanariu.Attrs{
+				"data-x-show": "$store.darkMode.on !== 'dark'",
+			},
+		}) {
+			@icons.IconSun()
+		}
+	}
+}
+
+func getThemeSwitcherClasses(props *ThemeSwitcherBosons) string {
+	return themeSwitcherStyles["default"] + " " + themeSwitcherSizeStyles[props.Size]
+}

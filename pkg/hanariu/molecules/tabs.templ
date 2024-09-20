@@ -1,0 +1,65 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	atoms "github.com/hanariu/hanariu/pkg/hanariu/atoms"
+)
+
+type TabsBosons struct {
+	Id        string
+	Type      string // tabs, pill, full
+	Items     []atoms.TabBosons
+	WithIcon  bool
+	WithBadge bool
+	Active    string
+}
+
+var tabsStyles = hanariu.Boson{
+	"select": "block w-full rounded-md border border-secondary-300 py-2 pl-3 pr-10 text-base focus:border-primary-600 focus:outline-none focus:ring-primary-500 sm:text-sm",
+	"tab":    "border-b border-gray-200 w-full",
+	"full":   "border-b border-gray-200",
+}
+
+var tabsTypeStyle = hanariu.Boson{
+	"tab":  "-mb-px flex space-x-8",
+	"pill": "flex space-x-4",
+	"full": "-mb-px flex",
+}
+
+templ Tabs(props *TabsBosons) {
+	<div data-x-data={ "{ activeTab: '" + props.Active + "' }" } class="w-full">
+		<div class="sm:hidden">
+			<label for={ props.Id } class="sr-only">Select a tab</label>
+			<!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
+			<select id={ props.Id } name="tabs" class={ tabsStyles["select"] }>
+				for _, item := range props.Items {
+					<option selected={ "{ activeTab === " + item.Id + " }" }>{ item.Title }</option>
+				}
+			</select>
+		</div>
+		<div class="hidden sm:block">
+			if props.Type == "pill" {
+				@getTabsNav(props, props.Type)
+			} else {
+				<div class={ tabsStyles[props.Type] }>
+					@getTabsNav(props, props.Type)
+				</div>
+			}
+		</div>
+		{ children... }
+	</div>
+}
+
+templ getTabsNav(props *TabsBosons, tabtype string) {
+	<nav class={ tabsTypeStyle[tabtype] } aria-label="Tabs">
+		for _, item := range props.Items {
+			@atoms.Tab(&item, props.Type, props.WithIcon, props.WithBadge, len(props.Items))
+		}
+	</nav>
+}
+
+templ TabsPanel(panel string) {
+	<div data-x-show={ "activeTab === '" + panel + "'" }>
+		{ children... }
+	</div>
+}

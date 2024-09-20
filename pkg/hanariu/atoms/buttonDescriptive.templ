@@ -1,0 +1,70 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type ButtonDescriptiveBosons struct {
+	Tag     string `default:"button"`
+	Heading string
+	Caption string
+	Right   bool
+	Reverse bool
+	Slot    bool
+	Attrs   hanariu.Attrs
+}
+
+var buttonDescriptiveStyles = hanariu.Boson{
+	"container":      "relative flex gap-4 border rounded-md py-3 px-4 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 hover:text-primary-700 border-secondary-200 focus:ring-primary-500 hover:border-primary-600/80 dark:hover:text-primary-50 dark:border-primary-700/80 dark:focus:ring-primary-500 dark:hover:border-primary-500/80 cursor-pointer group w-full ring-offset-secondary-50 dark:ring-offset-secondary-900",
+	"containerRight": "flex-row-reverse",
+	"content":        "flex gap-0.5",
+	"contentRight":   "text-right",
+	"contentLeft":    "text-left",
+	"contentCol":     "flex-col",
+	"contentReverse": "flex-col-reverse",
+	"heading":        "text-sm font-semibold text-primary-600 group-hover:text-primary-700 dark:text-primary-200 dark:group-hover:text-primary-50",
+	"caption":        "text-xs font-medium text-secondary-500 group-hover:text-secondary-600 dark:text-primary-300 dark:group-hover:text-primary-100",
+	"slot":           "pt-0.5 flex justify-center items-center",
+	"slotContainer":  "transition duration-150 ease-in-out w-8 fill-primary-500 group-hover:fill-primary-600 dark:fill-primary-400 dark:group-hover:fill-primary-300",
+}
+
+templ ButtonDescriptive(props *ButtonDescriptiveBosons) {
+	@getButtonDescriptive(props) {
+		if props.Slot {
+			<div class={ buttonDescriptiveStyles["slot"] }>
+				<div class={ buttonDescriptiveStyles["slotContainer"] }>
+					{ children... }
+				</div>
+			</div>
+		}
+		<div class={ getButtonDescriptiveContentClasses(props.Right, props.Reverse) }>
+			<div class={ buttonDescriptiveStyles["heading"] }>{ props.Heading }</div>
+			<div class={ buttonDescriptiveStyles["caption"] }>{ props.Caption }</div>
+		</div>
+	}
+}
+
+func getButtonDescriptive(props *ButtonDescriptiveBosons) templ.Component {
+	propsTag := hanariu.GetTagDefault("Tag", props.Tag, ButtonDescriptiveBosons{})
+	var classes = buttonDescriptiveStyles["container"]
+	if props.Right {
+		classes += " " + buttonDescriptiveStyles["containerRight"]
+	}
+	return hanariu.CreateComponent(propsTag, classes, props.Attrs, false)
+}
+
+func getButtonDescriptiveContentClasses(right, reverse bool) string {
+	var classes = buttonDescriptiveStyles["content"]
+	if right {
+		classes += " " + buttonDescriptiveStyles["contentRight"]
+	} else {
+		classes += " " + buttonDescriptiveStyles["contentLeft"]
+	}
+	if reverse {
+		classes += " " + buttonDescriptiveStyles["contentReverse"]
+	} else {
+		classes += " " + buttonDescriptiveStyles["contentCol"]
+	}
+	return classes
+
+}

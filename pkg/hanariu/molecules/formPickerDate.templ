@@ -1,0 +1,58 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+	atoms "github.com/hanariu/hanariu/pkg/hanariu/atoms"
+	icons "github.com/hanariu/hanariu/pkg/hanariu/icons"
+)
+
+templ FormPickerDate() {
+	@protons.Floating(&protons.FloatingBosons{Type: "dropdown"}) {
+		@atoms.FormInputField(&atoms.FormInputFieldBosons{
+			Attrs: hanariu.Attrs{
+				"data-x-bind": "{ 'data-x-on:click'() { if ($store.mobile.on) { $store.overlay.show('modal') } else { open = ! open } } }",
+				"data-x-ref":  "dropdown",
+			},
+		}) {
+			<div class="w-10 flex items-center justify-center cursor-pointer">
+				@protons.Icon(&protons.IconBosons{
+					Color: "secondary",
+					Size:  "sm",
+				}) {
+					@icons.IconCalendar()
+				}
+			</div>
+			@atoms.FormInput(&atoms.FormInputBosons{
+				Attrs: hanariu.Attrs{
+					"readonly": "",
+				},
+			})
+		}
+		<template data-x-if="!$store.mobile.on">
+			@atoms.Dropdown(&atoms.DropdownBosons{}) {
+				<div data-x-data="datepicker">
+					<div data-x-show="initial">
+						Content initial <span data-x-on:click="toggle">true</span>
+					</div>
+					<div data-x-show="!initial">
+						Content initial <span data-x-on:click="toggle">false</span>
+					</div>
+				</div>
+				// <template data-x-data="datePicker">
+				// <div data-x-show="datePicker.initial">
+				// 	Content initial true
+				// </div>
+				// <div data-x-show="!datePicker.initial">
+				// 	Content initial false
+				// </div>
+				// </template>
+			}
+		</template>
+		<template data-x-if="$store.mobile.on">
+			@atoms.Modal(&atoms.ModalBosons{}) {
+				Some content
+			}
+		</template>
+	}
+}

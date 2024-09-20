@@ -1,0 +1,109 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+)
+
+type ButtonLinkBosons struct {
+	Size     string `default:"md"`
+	Color    string `default:"primary"`
+	Type     string `default:"button"`
+	Tag      string `default:"button"`
+	Disabled bool
+	Full     bool
+	Reverse  bool
+	Title    string
+	Attrs    hanariu.Attrs
+}
+
+var buttonLinkStyles = hanariu.Boson{
+	"default": "relative inline-flex items-center justify-center font-semibold rounded-sm",
+	"active":  "transition duration-150 ease-in-out text-opacity-95 hover:text-opacity-100",
+	"reverse": "flex-row-reverse",
+	"full":    "w-full",
+}
+
+var buttonLinkColorStyles = hanariu.Boson{
+	"primary":   "text-primary-700 hover:text-primary-800 dark:text-primary-200 dark:hover:text-primary-50",
+	"secondary": "text-secondary-700 hover:text-secondary-800 dark:text-secondary-200 dark:hover:text-secondary-50",
+	"warning":   "text-warning-700 hover:text-warning-800 dark:text-warning-200 dark:hover:text-warning-50",
+	"danger":    "text-danger-700 hover:text-danger-800 dark:text-danger-200 dark:hover:text-danger-50",
+	"success":   "text-success-700 hover:text-success-800 dark:text-success-200 dark:hover:text-success-50",
+	"info":      "text-info-700 hover:text-info-800 dark:text-info-200 dark:hover:text-info-50",
+}
+
+var buttonLinkColorDisabledStyles = hanariu.Boson{
+	"primary":   "text-primary-700/50 dark:text-primary-500/50",
+	"secondary": "text-secondary-700/50 dark:text-secondary-500/50",
+	"warning":   "text-warning-700/50 dark:text-warning-500/50",
+	"danger":    "text-danger-700/50 dark:text-danger-500/50",
+	"success":   "text-success-700/50 dark:text-success-500/50",
+	"info":      "text-info-700/50 dark:text-infor-500/50",
+}
+
+var buttonLinkSizeStyles = hanariu.Boson{
+	"xs": "text-xs",
+	"sm": "text-sm",
+	"md": "text-base",
+	"lg": "text-lg",
+	"xl": "text-xl",
+}
+
+templ ButtonLink(props *ButtonLinkBosons) {
+	@getButtonLink(props) {
+		{ props.Title }
+	}
+}
+
+templ ButtonLinkIcon(props *ButtonLinkBosons) {
+	@getButtonLink(props) {
+		@protons.IconButton(&protons.IconButtonBosons{Size: props.Size, Reverse: props.Reverse}) {
+			{ children... }
+		}
+		{ props.Title }
+	}
+}
+
+func (attr *ButtonLinkBosons) makeButtonLinkAttrs() {
+	attrs := make(hanariu.Attrs)
+	for k, v := range attr.Attrs {
+		attrs[k] = v
+	}
+	attr.Attrs = attrs
+}
+
+func (prop *ButtonLinkBosons) addButtonLinkAttr(k, v string) {
+	prop.Attrs[k] = v
+}
+
+func getButtonLink(props *ButtonLinkBosons) templ.Component {
+	props.Size = hanariu.GetTagDefault("Size", props.Size, ButtonBosons{})
+	props.Color = hanariu.GetTagDefault("Color", props.Color, ButtonBosons{})
+	props.Type = hanariu.GetTagDefault("Type", props.Type, ButtonBosons{})
+	props.makeButtonLinkAttrs()
+	props.addButtonLinkAttr("type", props.Type)
+	props.Tag = hanariu.GetTagDefault("Tag", props.Tag, ButtonBosons{})
+	classes := getButtonLinkClasses(props)
+	return hanariu.CreateComponent(props.Tag, classes, props.Attrs, false)
+}
+
+func getButtonLinkClasses(props *ButtonLinkBosons) string {
+	var classes = buttonLinkStyles["default"] + " " + buttonLinkSizeStyles[props.Size]
+
+	if props.Reverse {
+		classes += " " + buttonLinkStyles["reverse"]
+	}
+
+	if props.Disabled {
+		classes += " " + buttonLinkColorDisabledStyles[props.Color]
+	} else {
+		classes += " " + buttonLinkStyles["active"] + " " + buttonLinkColorStyles[props.Color]
+	}
+
+	if props.Full {
+		classes += " " + buttonLinkStyles["full"]
+	}
+
+	return classes
+}

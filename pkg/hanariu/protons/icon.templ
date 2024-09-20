@@ -1,0 +1,60 @@
+package hanariu
+
+import (
+	hanariu "github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type IconBosons struct {
+	Size    string `default:"md"`
+	Color   string `default:"primary"`
+	ViewBox string `default:"0 0 32 32"`
+	NoClass bool
+	Attrs   hanariu.Attrs
+}
+
+var iconFillStyles = hanariu.Boson{
+	"current":   "fill-current",
+	"primary":   "fill-primary-600 dark:fill-primary-300",
+	"secondary": "fill-secondary-600 dark:fill-secondary-300",
+	"warning":   "fill-warning-600 dark:fill-warning-300",
+	"danger":    "fill-danger-600 dark:fill-danger-300",
+	"success":   "fill-success-600 dark:fill-success-300",
+	"info":      "fill-info-600 dark:fill-info-300",
+}
+
+var iconSizeStyles = hanariu.Boson{
+	"full": "w-full h-full",
+	"xs":   "w-4 h-4",
+	"sm":   "w-6 h-6",
+	"md":   "w-8 h-8",
+	"lg":   "w-10 h-10",
+	"xl":   "w-12 h-12",
+}
+
+func (attr *IconBosons) makeIconAttrs() {
+	attrs := make(hanariu.Attrs)
+	for k, v := range attr.Attrs {
+		attrs[k] = v
+	}
+	attr.Attrs = attrs
+}
+
+func (prop *IconBosons) addIconAttr(k, v string) {
+	prop.Attrs[k] = v
+}
+
+func Icon(props *IconBosons) templ.Component {
+	var classes = ""
+	if !props.NoClass {
+		classes += getIconClasses(props.Size, props.Color)
+	}
+	props.makeIconAttrs()
+	props.addIconAttr("viewbox", hanariu.GetTagDefault("ViewBox", props.ViewBox, IconBosons{}))
+	return hanariu.CreateComponent("svg", classes, props.Attrs, false)
+}
+
+func getIconClasses(size, color string) string {
+	sizeIcon := hanariu.GetTagDefault("Size", size, IconBosons{})
+	colorIcon := hanariu.GetTagDefault("Color", color, IconBosons{})
+	return iconFillStyles[colorIcon] + " " + iconSizeStyles[sizeIcon]
+}

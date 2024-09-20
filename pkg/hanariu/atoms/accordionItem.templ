@@ -1,0 +1,53 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type AccordionItemBosons struct {
+	Title    string `default:""`
+	Id       string `default:"1"`
+	Collapse bool
+	Open     bool
+}
+
+var accordionItemeStyles = hanariu.Boson{
+	"item":   "pt-6 pb-4",
+	"button": "group mb-1 inline-flex items-center justify-between gap-x-3 w-full md:text-lg font-semibold text-start text-secondary-800 rounded-lg transition hover:text-primary-600 dark:text-primary-200 dark:hover:text-primary-50",
+	"svg":    "flex-shrink-0 size-5 text-secondary-600 group-hover:text-secondary-500 dark:text-primary-200 dark:group-hover:text-primary-50",
+	"div":    "relative max-h-0 w-full overflow-hidden transition-all duration-300 text-secondary-600 dark:text-primary-300",
+}
+
+templ AccordionItem(props *AccordionItemBosons) {
+	if props.Collapse {
+		<div class={ accordionItemeStyles["item"] } id={ `heading-` + props.Id } data-x-data={ geAccordionItemSelected(props.Id, props.Open) }>
+			@conentAccordionItem(props.Title, props.Id) {
+				{ children... }
+			}
+		</div>
+	} else {
+		<div class={ accordionItemeStyles["item"] } id={ `heading-` + props.Id }>
+			@conentAccordionItem(props.Title, props.Id) {
+				{ children... }
+			}
+		</div>
+	}
+}
+
+templ conentAccordionItem(title, id string) {
+	<button class={ accordionItemeStyles["button"] } data-x-on:click={ `selected !== ` + id + ` ? selected = ` + id + ` : selected = null` } aria-controls={ `collapse-` + id }>
+		{ title }
+		<svg class={ accordionItemeStyles["svg"] } xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path data-x-show={ `selected !== ` + id } d="m6 9 6 6 6-6"></path><path data-x-show={ `selected === ` + id } d="m18 15-6-6-6 6"></path></svg>
+	</button>
+	<div id={ "collapse-" + id } class={ accordionItemeStyles["div"] } aria-labelledby={ `heading-` + id } data-x-bind:style={ `selected === ` + id + ` ? 'max-height: ' + $refs.container` + id + `.scrollHeight + 'px' : ''` } data-x-ref={ `container` + id }>
+		{ children... }
+	</div>
+}
+
+func geAccordionItemSelected(id string, open bool) string {
+	if open {
+		return `{selected: ` + id + `}`
+	} else {
+		return "{selected: null}"
+	}
+}

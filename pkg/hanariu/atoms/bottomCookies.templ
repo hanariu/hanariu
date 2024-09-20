@@ -1,0 +1,44 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+var bottomCookiesStyles = hanariu.Boson{
+	"bottomCookies":  "relative w-auto h-auto",
+	"default":        "fixed bottom-0 z-40 w-full",
+	"content":        "absolute bottom-0 shadow-xl justify-items-center justify-center items-center w-full",
+	"slideContainer": "h-auto flex flex-col bg-white dark:bg-primary-900 shadow-xl w-full m-auto",
+}
+
+func bottomCookiesContent() templ.Component {
+	attrs := make(hanariu.Attrs)
+	var bind = "{['data-x-transition:enter']: 'transform transition ease-in-out duration-200 sm:duration-300',['data-x-transition:enter-start']: 'translate-y-full',['data-x-transition:enter-end']: 'translate-y-0',['data-x-transition:leave']: 'transform transition ease-in-out duration-200 sm:duration-300',['data-x-transition:leave-start']: 'translate-y-0',['data-x-transition:leave-end']: 'translate-y-full'"
+	bind += "}"
+	attrs["data-x-show"] = "$store.cookies.show === true"
+	attrs["data-x-bind"] = bind
+
+	return hanariu.CreateComponent("div", bottomCookiesStyles["content"], attrs, false)
+}
+
+templ BottomCookies() {
+	<div
+		data-x-data
+		data-x-bind={ "{['data-x-bind:class']() { $store.cookies.show === true ? 'z-40' : '' }}" }
+		class={ bottomCookiesStyles["bottomCookies"] }
+	>
+		<template data-x-teleport="body">
+			<div
+				class={ bottomCookiesStyles["default"] }
+				data-x-show={ "$store.cookies.show === true" }
+				data-x-cloak
+			>
+				@bottomCookiesContent() {
+					<div class={ bottomCookiesStyles["slideContainer"] }>
+						{ children... }
+					</div>
+				}
+			</div>
+		</template>
+	</div>
+}

@@ -1,0 +1,69 @@
+package hanariu
+
+import (
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type TabBosons struct {
+	Id    string
+	Title string
+	Icon  templ.Component
+	Badge string `default:""`
+}
+
+var tabStyles = hanariu.Boson{
+	"icon":         "-ml-0.5 mr-2 h-5 w-5",
+	"tab":          "cursor-pointer border-transparent group inline-flex items-center border-b-2 py-4 px-1 text-sm font-medium",
+	"tabDefault":   " text-secondary-500 hover:border-b-secondary-300 hover:text-secondary-700",
+	"tabActive":    " border-b-primary-500 text-primary-600",
+	"pill":         "cursor-pointer rounded-md px-3 py-2 text-sm font-medium",
+	"pillDefault":  "text-gray-500 hover:text-gray-700",
+	"pillActive":   "bg-gray-100 text-gray-700",
+	"full":         "cursor-pointer border-transparent group inline-flex items-center justify-center border-b-2 py-4 px-1 text-sm font-medium text-center w-1/3",
+	"fullDefault":  "text-secondary-500 hover:border-b-secondary-300 hover:text-secondary-700",
+	"fullActive":   "border-b-primary-500 text-primary-600",
+	"badge":        "ml-3 hidden rounded-full py-0.5 px-2.5 text-xs font-medium md:inline-block",
+	"badgeDefault": "bg-secondary-100 text-secondary-700",
+	"badgeActive":  "bg-primary-100 text-primary-600",
+}
+
+templ Tab(props *TabBosons, tabType string, withIcon bool, withBadge bool, itemsCount int) {
+	@getTab(props, tabType) {
+		@getTabIcon(withIcon) {
+			@props.Icon
+		}
+		<span>{ props.Title }</span>
+		@getTabBadge(withBadge, props.Badge, props.Id)
+	}
+}
+
+func getTab(props *TabBosons, tabType string) templ.Component {
+	attrs := make(hanariu.Attrs)
+	tabActive := tabType + "Active"
+	tabDefault := tabType + "Default"
+	attrs["data-x-cloak"] = ""
+	attrs["data-x-bind"] = "{['data-x-on:click']() { activeTab = '" + props.Id + "'}, ['data-x-bind:class']() { return activeTab === '" + props.Id + "' ? '" + tabStyles[tabActive] + "' : '" + tabStyles[tabDefault] + "'}}"
+	return hanariu.CreateComponent("div", tabStyles[tabType], attrs, false)
+}
+
+templ getTabIcon(withIcon bool) {
+	if withIcon {
+		@protons.Icon(&protons.IconBosons{
+			NoClass: true,
+			Attrs: hanariu.Attrs{
+				"class":       tabStyles["icon"],
+				"fill":        "currentColor",
+				"aria-hidden": "true",
+			},
+		}) {
+			{ children... }
+		}
+	}
+}
+
+templ getTabBadge(withBadge bool, badge string, id string) {
+	if withBadge && len(badge) > 0 {
+		<span class={ tabStyles["badge"] } data-x-bind:class={ "activeTab === '" + id + "' ? '" + tabStyles["badgeActive"] + "' : '" + tabStyles["badgeDefault"] + "'" }>{ badge }</span>
+	}
+}

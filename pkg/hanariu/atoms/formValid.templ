@@ -1,0 +1,31 @@
+package hanariu
+
+import "github.com/hanariu/hanariu/pkg/hanariu"
+
+type FormValidBosons struct {
+	Info  string
+	Error string
+}
+
+var formValidStyles = hanariu.Boson{
+	"error": "text-xs text-danger-700/80 dark:text-danger-300/80",
+	"info":  "text-xs text-secondary-600 dark:text-primary-300",
+}
+
+templ FormValid(props *FormValidBosons) {
+	if len(props.Error) > 0 || len(props.Info) > 0 {
+		if len(props.Error) > 0 {
+			<span class={ getFormValidClasses(props.Error) }>{ props.Error }</span>
+		} else {
+			<span class={ getFormValidClasses("") }>{ props.Info }</span>
+		}
+	}
+}
+
+func getFormValidClasses(err string) string {
+	if len(err) > 0 {
+		return formValidStyles["error"]
+	} else {
+		return formValidStyles["info"]
+	}
+}

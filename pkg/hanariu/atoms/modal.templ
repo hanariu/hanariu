@@ -1,0 +1,80 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+)
+
+type ModalBosons struct {
+	Blocked   bool
+	WidthAuto bool
+	Preview   bool
+	Id        string `default:"modal"`
+}
+
+var modalStyles = hanariu.Boson{
+	"modal":            "relative w-auto h-auto",
+	"main":             "fixed inset-0 bottom-0 z-[99] flex items-center justify-center w-full",
+	"container":        "flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0",
+	"containerPreview": "flex min-h-full items-end justify-center text-center sm:items-center p-0",
+	"content":          "relative flex flex-col gap-6 transform overflow-hidden rounded-lg bg-secondary-50 dark:bg-primary-900 text-left shadow-xl transition-all",
+	"width":            "w-full max-w-sm",
+	"widthAuto":        "w-auto",
+}
+
+func modalContent(props *ModalBosons) templ.Component {
+	classes := getModalContentClasses(props.WidthAuto)
+	attrs := make(hanariu.Attrs)
+	if !props.Preview {
+		var bind = "{['data-x-transition:enter']: 'ease-out duration-300',['data-x-transition:enter-start']: 'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95',['data-x-transition:enter-end']: 'opacity-100 translate-y-0 sm:scale-100',['data-x-transition:leave']: 'ease-in duration-200',['data-x-transition:leave-start']: 'opacity-100 translate-y-0 sm:scale-100',['data-x-transition:leave-end']: 'opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'"
+		if !props.Blocked {
+			bind += ", ['data-x-on:click.outside']() { $store.overlay.close()}"
+		}
+		bind += "}"
+		attrs["data-x-show"] = "$store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, ModalBosons{}) + "'"
+		attrs["data-x-bind"] = bind
+	}
+
+	return hanariu.CreateComponent("div", classes, attrs, false)
+}
+
+templ Modal(props *ModalBosons) {
+	if props.Preview {
+		<div class={ modalStyles["containerPreview"] }>
+			@modalContent(props) {
+				{ children... }
+			}
+		</div>
+	} else {
+		<div
+			data-x-data
+			data-x-bind={ "{['data-x-on:keydown.escape.window']() { $store.overlay.close() }, ['data-x-bind:class']() { $store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, ModalBosons{}) + "' ? 'z-40' : '' }}" }
+			class={ modalStyles["modal"] }
+		>
+			<template data-x-teleport="body">
+				<div
+					class={ modalStyles["main"] }
+					data-x-cloak
+					data-x-show={ "$store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, ModalBosons{}) + "'" }
+				>
+					@protons.Overlay(&protons.OverlayBosons{})
+					<div class={ modalStyles["container"] } data-x-show={ "$store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, ModalBosons{}) + "'" }>
+						@modalContent(props) {
+							{ children... }
+						}
+					</div>
+				</div>
+			</template>
+		</div>
+	}
+}
+
+func getModalContentClasses(widthauto bool) string {
+	var modalContentClasses = modalStyles["content"]
+	if widthauto {
+		modalContentClasses += " " + modalStyles["widthAuto"]
+	} else {
+		modalContentClasses += " " + modalStyles["width"]
+	}
+	return modalContentClasses
+}

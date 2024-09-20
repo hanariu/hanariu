@@ -1,0 +1,81 @@
+package hanariu
+
+import (
+	"github.com/go-mods/initials"
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type AvatarBosons struct {
+	Size  string `default:"md"`
+	Alt   string `default:""`
+	Path  string `default:""`
+	Shape string `default:"circle"`
+}
+
+var avatarSizeStyles = hanariu.Boson{
+	"xs":   "h-8 w-8",
+	"sm":   "h-10 w-10",
+	"md":   "h-12 w-12",
+	"lg":   "h-16 w-16",
+	"xl":   "h-20 w-20",
+	"full": "h-full w-full",
+}
+
+var avatarIinitialsStyles = hanariu.Boson{
+	"xs":   "text-[10px] font-medium",
+	"sm":   "text-sm font-medium",
+	"md":   "text-md font-medium",
+	"lg":   "text-xl font-medium",
+	"xl":   "text-2xl font-medium",
+	"full": "font-medium",
+}
+
+var avatarShapeStyles = hanariu.Boson{
+	"square": "rounded-md",
+	"circle": "rounded-full-percent",
+}
+var avatarStyles = hanariu.Boson{
+	"main":     "inline-block",
+	"initials": "mt-0 text-primary-800/90 dark:text-primary-100",
+	"span":     "inline-flex items-center justify-center bg-primary-50 border border-primary-400 dark:bg-primary-900/40 dark:border-primary-400 dark:border-opacity-50 ",
+}
+
+templ Avatar(props *AvatarBosons) {
+	if len(props.Path) > 0 {
+		@avatarImg(props.Size, props.Shape, props.Path, props.Alt)
+	} else {
+		@avatarInitials(props.Size, props.Shape, props.Alt)
+	}
+}
+
+templ avatarImg(size, shape, path, alt string) {
+	<img
+		draggable="false"
+		class={ getImgClasses(size, shape) }
+		src={ path }
+		alt={ alt }
+	/>
+}
+
+templ avatarInitials(size, shape, alt string) {
+	<span class={ getInitialsClasses(size, shape) }>
+		<span class={ getInitialsSubClasses(size) }>{ initials.GetInitials(alt) }</span>
+	</span>
+}
+
+func getImgClasses(size, shape string) string {
+	imgSize := hanariu.GetTagDefault("Size", size, AvatarBosons{})
+	imgShape := hanariu.GetTagDefault("Shape", shape, AvatarBosons{})
+	return hanariu.CreateClasses("Size", imgSize, AvatarBosons{}, avatarSizeStyles) + " " + hanariu.CreateClasses("Shape", imgShape, AvatarBosons{}, avatarShapeStyles)
+}
+
+func getInitialsClasses(size, shape string) string {
+	initialsSize := hanariu.GetTagDefault("Size", size, AvatarBosons{})
+	initialsShape := hanariu.GetTagDefault("Shape", shape, AvatarBosons{})
+	return avatarStyles["span"] + " " + hanariu.CreateClasses("Size", initialsSize, AvatarBosons{}, avatarSizeStyles) + " " + hanariu.CreateClasses("Shape", initialsShape, AvatarBosons{}, avatarShapeStyles)
+}
+
+func getInitialsSubClasses(size string) string {
+	initialsSize := hanariu.GetTagDefault("Size", size, AvatarBosons{})
+	return avatarStyles["initials"] + " " + hanariu.CreateClasses("Size", initialsSize, AvatarBosons{}, avatarIinitialsStyles)
+}

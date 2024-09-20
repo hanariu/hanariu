@@ -1,0 +1,52 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+tmp
+.DS_Store
+dist
+dist-ssr
+coverage
+*.local
+.npmrc
+.env
+.env.*
+!.env.sample
+!.env.example
+docker-compose.yml
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# App
+web/static/*
+!web/static/favicon.ico
+!web/static/robots.txt
+!web/static/logo
+!web/static/images
+!web/static/chroma.css
+!web/static/apple-touch-icon-180x180.png
+!web/static/hanariu.svg
+!web/static/thumbnail.jpg
+*_templ.go
+*_templ.txt
+!*.gitkeep
+payfordone-hanariu-landing-go
+
+# Vitepress
+docs/.vitepress/dist
+docs/.vitepress/cache

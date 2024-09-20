@@ -1,0 +1,55 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+var modalFooterStyles = hanariu.Boson{
+	"default":        "relative flex w-full gap-3 pb-6 px-6 justify-between flex-col-reverse",
+	"slot":           "flex-none items-center justify-center text-center",
+	"horizontal":     "sm:flex-row",
+	"slotHorizontal": "sm:justify-start sm:text-left",
+	"buttons":        "flex gap-3 justify-end w-full flex-col-reverse",
+}
+
+templ ModalFooter(vertical bool) {
+	<div class={ getModalFooterClasses(vertical) }>
+		{ children... }
+	</div>
+}
+
+templ ModalFooterButtons(vertical bool) {
+	<div class={ getModalFooterButtonsClasses(vertical) }>
+		{ children... }
+	</div>
+}
+
+templ ModalFooterSlot(vertical bool) {
+	<div class={ getModalFooterSlotClasses(vertical) }>
+		{ children... }
+	</div>
+}
+
+func getModalFooterClasses(vertical bool) string {
+	var classes = modalFooterStyles["default"]
+	if !vertical {
+		classes += " " + modalFooterStyles["horizontal"]
+	}
+	return classes
+}
+
+func getModalFooterSlotClasses(vertical bool) string {
+	var classes = modalFooterStyles["slot"]
+	if !vertical {
+		classes += " " + modalFooterStyles["slotHorizontal"]
+	}
+	return classes
+}
+
+func getModalFooterButtonsClasses(vertical bool) string {
+	var classes = modalFooterStyles["buttons"]
+	if !vertical {
+		classes += " " + modalFooterStyles["horizontal"]
+	}
+	return classes
+}

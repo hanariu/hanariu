@@ -1,0 +1,71 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type IconButtonBosons struct {
+	Size     string
+	Icononly bool
+	Reverse  bool
+	ViewBox  string `default:"0 0 32 32"`
+	Attrs    hanariu.Attrs
+}
+
+var iconButtonStyles = hanariu.Boson{
+	"current": "fill-current",
+}
+
+var iconButtonSizeStyles = hanariu.Boson{
+	"xs": "h-3.5 w-3.5 md:h-3 md:w-3",
+	"sm": "h-4 w-4 md:h-3.5 md:w-3.5",
+	"md": "h-6 w-6 md:h-4 md:w-4",
+	"lg": "h-7 w-7 md:h-5 md:w-5",
+	"xl": "h-8 w-8 md:h-6 md:w-6",
+}
+
+var iconButtonSizeIconOnlyStyles = hanariu.Boson{
+	"xs": "h-5 w-5 md:h-4 md:w-4",
+	"sm": "h-5 w-5 md:h-5 md:w-5",
+	"md": "h-6 w-6 md:h-5 md:w-5",
+	"lg": "h-7 w-7 md:h-6 md:w-6",
+	"xl": "h-7 w-7 md:h-6 md:w-6",
+}
+
+var iconButtonNotReverseStyles = hanariu.Boson{
+	"xs": "-ml-0.5 mr-1.5",
+	"sm": "-ml-0.5 mr-2",
+	"md": "-ml-1 mr-2",
+	"lg": "-ml-1 mr-3",
+	"xl": "-ml-1 mr-3",
+}
+
+var iconButtonReverseStyles = hanariu.Boson{
+	"xs": "ml-1.5 -mr-0.5",
+	"sm": "ml-2 -mr-0.5",
+	"md": "ml-2 -mr-1",
+	"lg": "ml-3 -mr-1",
+	"xl": "ml-3 -mr-1",
+}
+
+func IconButton(props *IconButtonBosons) templ.Component {
+	classes := geticonButtonClasses(props.Size, props.Icononly, props.Reverse)
+	attrs := make(hanariu.Attrs)
+	attrs["viewbox"] = hanariu.GetTagDefault("ViewBox", props.ViewBox, IconButtonBosons{})
+	return hanariu.CreateComponent("svg", classes, attrs, false)
+}
+
+func geticonButtonClasses(size string, icononly bool, reverse bool) string {
+	var iconButtonClasses = iconButtonStyles["current"]
+	if icononly {
+		iconButtonClasses += " " + iconButtonSizeIconOnlyStyles[size]
+	} else {
+		iconButtonClasses += " " + iconButtonSizeStyles[size]
+		if reverse {
+			iconButtonClasses += " " + iconButtonReverseStyles[size]
+		} else {
+			iconButtonClasses += " " + iconButtonNotReverseStyles[size]
+		}
+	}
+	return iconButtonClasses
+}

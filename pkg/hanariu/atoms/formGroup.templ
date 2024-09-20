@@ -1,0 +1,26 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type FormGroupBosons struct {
+	Template string `default:"vertical"`
+	Attrs    hanariu.Attrs
+}
+
+var formGroupStyles = hanariu.Boson{
+	"default":    "grid gap-4",
+	"vertical":   "grid-flow-row",
+	"horizontal": "grid-flow-row sm:grid-flow-col",
+}
+
+func FormGroup(props *FormGroupBosons) templ.Component {
+	classes := getFormGroupClasses(props.Template)
+	return hanariu.CreateComponent("div", classes, props.Attrs, false)
+}
+
+func getFormGroupClasses(template string) string {
+	temp := hanariu.GetTagDefault("Template", template, FormGroupBosons{})
+	return formGroupStyles["default"] + " " + formGroupStyles[temp]
+}

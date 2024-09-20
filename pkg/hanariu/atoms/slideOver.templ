@@ -1,0 +1,66 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+)
+
+type SlideOverBosons struct {
+	Blocked bool
+	Size    string `default:"md"` // xs, sm, md
+	Id      string `default:"slideover"`
+}
+
+var slideOverStyles = hanariu.Boson{
+	"slideOver":      "relative w-auto h-auto",
+	"default":        "fixed inset-0 overflow-hidden z-[99]",
+	"main":           "absolute inset-0 overflow-hidden",
+	"container":      "pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10",
+	"content":        "pointer-events-auto w-screen",
+	"slideContainer": "flex h-[100vh] flex-col bg-white dark:bg-primary-900 shadow-xl",
+}
+var slideOverSizesStyles = hanariu.Boson{
+	"xs": "max-w-xs",
+	"sm": "max-w-sm",
+	"md": "max-w-md",
+}
+
+func slideOverContent(props *SlideOverBosons) templ.Component {
+	attrs := make(hanariu.Attrs)
+	var bind = "{['data-x-transition:enter']: 'transform transition ease-in-out duration-200 sm:duration-300',['data-x-transition:enter-start']: 'translate-x-full',['data-x-transition:enter-end']: 'translate-x-0',['data-x-transition:leave']: 'transform transition ease-in-out duration-200 sm:duration-300',['data-x-transition:leave-start']: 'translate-x-0',['data-x-transition:leave-end']: 'translate-x-full'"
+	if !props.Blocked {
+		bind += ", ['data-x-on:click.outside']() { $store.overlay.close()}"
+	}
+	bind += "}"
+	attrs["data-x-show"] = "$store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, SlideOverBosons{}) + "'"
+	attrs["data-x-bind"] = bind
+	classes := slideOverStyles["content"] + " " + slideOverSizesStyles[props.Size]
+	return hanariu.CreateComponent("div", classes, attrs, false)
+}
+
+templ SlideOver(props *SlideOverBosons) {
+	<div
+		data-x-data
+		data-x-bind={ "{['data-x-on:keydown.escape.window']() { $store.overlay.close() }, ['data-x-bind:class']() { $store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, SlideOverBosons{}) + "' ? 'z-40' : '' }}" }
+		class={ slideOverStyles["slideOver"] }
+	>
+		<template data-x-teleport="body">
+			<div
+				class={ slideOverStyles["default"] }
+				data-x-show={ "$store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, SlideOverBosons{}) + "'" }
+				data-x-cloak
+			>
+				@protons.Overlay(&protons.OverlayBosons{})
+				<div class={ slideOverStyles["main"] }>
+					<div class={ slideOverStyles["container"] } data-x-show={ "$store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, SlideOverBosons{}) + "'" }>
+						@slideOverContent(props) {
+							<div class={ slideOverStyles["slideContainer"] }>
+								{ children... }
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</template>
+	</div>
+}

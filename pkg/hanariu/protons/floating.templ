@@ -1,0 +1,32 @@
+package hanariu
+
+type FloatingBosons struct {
+	Type string `default:"dropdown"` // dropdown, popover, tooltip
+}
+
+templ Floating(props *FloatingBosons) {
+	switch props.Type {
+		case "popover":
+			<div
+				data-x-data="popover"
+				class="relative"
+				data-x-on:mouseover="hoverCardEnter()"
+				data-x-on:mouseleave="hoverCardLeave()"
+			>
+				{ children... }
+			</div>
+		case "tooltip":
+			<div
+				data-x-data="{ open: false }"
+				class="relative"
+				data-x-on:mouseover="open = true"
+				data-x-on:mouseleave="open = false"
+			>
+				{ children... }
+			</div>
+		default:
+			<div data-x-data="{ open: false }" class="relative z-10">
+				{ children... }
+			</div>
+	}
+}

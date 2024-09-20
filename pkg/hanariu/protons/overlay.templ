@@ -1,0 +1,46 @@
+package hanariu
+
+import "github.com/hanariu/hanariu/pkg/hanariu"
+
+type OverlayBosons struct {
+	Clickable bool
+	Absolute  bool
+	Attrs     hanariu.Attrs
+}
+
+var overlayStyles = hanariu.Boson{
+	"parent":   "inset-0",
+	"fixed":    "fixed",
+	"absolute": "absolute",
+	"children": "absolute inset-0 bg-secondary-200 dark:bg-primary-800 opacity-90 dark:opacity-90",
+}
+
+func overlayLayer(props *OverlayBosons) templ.Component {
+	classes := getOverlayClasses(props.Absolute)
+	attrs := make(hanariu.Attrs)
+	var bind = "{['data-x-transition:enter']: 'duration-300 ease-out',['data-x-transition:enter-start']: 'opacity-0',['data-x-transition:enter-end']: 'opacity-100',['data-x-transition:leave']: 'duration-200 ease-in',['data-x-transition:leave-start']: 'opacity-100',['data-x-transition:leave-end']: 'opacity-0'"
+	if props.Clickable {
+		bind += ", ['data-x-on:click']() { $store.overlay.close()}"
+	}
+	bind += "}"
+	attrs["data-x-data"] = ""
+	attrs["data-x-show"] = "$store.overlay.isOverlay"
+	attrs["data-x-bind"] = bind
+	return hanariu.CreateComponent("div", classes, attrs, false)
+}
+
+templ Overlay(props *OverlayBosons) {
+	@overlayLayer(props) {
+		<div class={ overlayStyles["children"] }></div>
+	}
+}
+
+func getOverlayClasses(absolute bool) string {
+	var overlayClasses = overlayStyles["parent"]
+	if absolute {
+		overlayClasses += " " + overlayStyles["absolute"]
+	} else {
+		overlayClasses += " " + overlayStyles["fixed"]
+	}
+	return overlayClasses
+}

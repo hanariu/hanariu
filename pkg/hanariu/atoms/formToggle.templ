@@ -1,0 +1,52 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+)
+
+var formToggleStyles = hanariu.Boson{
+	"default": "flex flex-col",
+	"label":   "text-secondary-800 dark:text-primary-200 font-normal leading-4 pt-0.5 cursor-pointer",
+	"slot":    "-mt-0.5",
+}
+
+var formToggleSlotStyles = hanariu.Boson{
+	"sm": "pl-11",
+	"md": "pl-[52px]",
+	"lg": "pl-[60px]",
+}
+
+var formToggleLabelSizesStyles = hanariu.Boson{
+	"sm": "text-xs",
+	"md": "text-sm",
+	"lg": "text-base",
+}
+
+type FormToggleBosons struct {
+	Id      string `default:"toggle"`
+	Size    string `default:"md"`
+	Label   string
+	Checked bool
+	Slot    bool
+	Attrs   hanariu.Attrs
+}
+
+templ FormToggle(props *FormToggleBosons) {
+	<div class={ formToggleStyles["default"] }>
+		@protons.Toggle(&protons.ToggleBosons{Size: props.Size, Checked: props.Checked, Id: props.Id, Attrs: props.Attrs}) {
+			if len(props.Label) > 0 {
+				<label for={ props.Id } class={ formToggleStyles["label"] + " " + formToggleLabelSizesStyles[props.Size] }>{ props.Label }</label>
+			}
+		}
+		if props.Slot {
+			<div class={ getFormToggleClass(props.Size) }>
+				{ children... }
+			</div>
+		}
+	</div>
+}
+
+func getFormToggleClass(size string) string {
+	return formToggleStyles["slot"] + " " + formToggleSlotStyles[size]
+}

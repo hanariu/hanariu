@@ -1,0 +1,35 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type CheckboxBosons struct {
+	Error bool
+	Attrs hanariu.Attrs
+}
+
+var checkboxStyles = hanariu.Boson{
+	"default": "form-checkbox h-4 w-4 rounded border border-solid mt-0.5 cursor-pointer dark:fill-primary=900",
+	"noerror": "border-secondary-400 dark:border-primary-700/80 dark:bg-primary-900 dark:checked:bg-primary-600 text-primary-600 dark:text-primary-600 focus:ring-primary-600 dark:focus:ring-primary-600 ring-offset-secondary-50 dark:ring-offset-primary-900",
+	"error":   "text-primary-600 dark:text-primary-600 border-danger-700/80 dark:border-danger-300/80 dark:bg-primary-900 focus:border-danger-500 focus:ring-danger-500 focus:checked:ring-primary-600 focus:checked:border-primary-600 ring-offset-secondary-50 dark:ring-offset-primary-900",
+}
+
+func Checkbox(props *CheckboxBosons) templ.Component {
+	attrs := make(hanariu.Attrs)
+	for k, v := range props.Attrs {
+		attrs[k] = v
+	}
+	attrs["type"] = "checkbox"
+	return hanariu.CreateComponent("input", getCheckboxClasses(props.Error), attrs, true)
+}
+
+func getCheckboxClasses(err bool) string {
+	var classes = checkboxStyles["default"] + " "
+	if err {
+		classes += checkboxStyles["error"]
+	} else {
+		classes += checkboxStyles["noerror"]
+	}
+	return classes
+}

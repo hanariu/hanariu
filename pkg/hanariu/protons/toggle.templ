@@ -1,0 +1,76 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type ToggleBosons struct {
+	Id      string `default:"toggle"`
+	Size    string `default:"md"`
+	Checked bool
+	Attrs   hanariu.Attrs
+}
+
+var toggleStyles = hanariu.Boson{
+	"default":  "inline-flex flex-row-reverse flex-shrink-0 cursor-pointer gap-3 justify-end",
+	"checkbox": "sr-only peer",
+	"area":     "relative rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 ring-offset-secondary-50 dark:ring-offset-secondary-900 focus:ring-offset-2",
+	"circle":   "absolute pointer-events-none inline-block rounded-full overflow-hidden shadow transform ring-0 transition ease-in-out duration-200 left-0",
+}
+
+var toggleSizesStyles = hanariu.Boson{
+	"sm": "h-4 w-8 text-sm",
+	"md": "h-5 w-10 text-base",
+	"lg": "h-6 w-12 text-lg",
+}
+
+var toggleSizesCircleStyles = hanariu.Boson{
+	"sm": "h-3 w-3",
+	"md": "h-4 w-4",
+	"lg": "h-5 w-5",
+}
+
+var toggleToggledStyles = hanariu.Boson{
+	"area":   "bg-primary-600",
+	"circle": "bg-secondary-50 dark:bg-primary-200",
+}
+
+var toggleNotToggledStyles = hanariu.Boson{
+	"area":   "bg-secondary-300 dark:bg-primary-900",
+	"circle": "translate-x-0 bg-secondary-50 dark:bg-primary-500",
+}
+
+var toggleSizeToggledStyles = hanariu.Boson{
+	"sm": "translate-x-4",
+	"md": "translate-x-5",
+	"lg": "translate-x-6",
+}
+
+templ Toggle(props *ToggleBosons) {
+	<div data-x-data={ toggleCheckboxGetState(props.Checked) } class={ toggleStyles["default"] }>
+		@toggleCheckbox(props)
+		{ children... }
+		<div class={ toggleSizesStyles[props.Size] + " " + toggleStyles["area"] } data-x-bind={ "{['data-x-on:click']() { checked = !checked }, ['data-x-bind:class']() { return checked ? '" + toggleToggledStyles["area"] + "' : '" + toggleNotToggledStyles["area"] + "'}}" }>
+			<div class={ toggleStyles["circle"] + " " + toggleSizesCircleStyles[props.Size] } data-x-bind={ "{['data-x-bind:class']() { return checked ? '" + toggleToggledStyles["circle"] + " " + toggleSizeToggledStyles[props.Size] + "' : '" + toggleNotToggledStyles["circle"] + "' }}" }></div>
+		</div>
+	</div>
+}
+
+func toggleCheckbox(props *ToggleBosons) templ.Component {
+	attrs := make(hanariu.Attrs)
+	for k, v := range props.Attrs {
+		attrs[k] = v
+	}
+	attrs["type"] = "checkbox"
+	attrs["id"] = props.Id
+	attrs["data-x-bind"] = "{['data-x-bind:checked']() { return checked ? true : false }, ['data-x-on:change']() { checked = !checked }}"
+	return hanariu.CreateComponent("input", toggleStyles["checkbox"], attrs, true)
+}
+
+func toggleCheckboxGetState(checked bool) string {
+	if checked {
+		return "{ checked: true }"
+	} else {
+		return "{ checked: false }"
+	}
+}

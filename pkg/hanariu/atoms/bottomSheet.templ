@@ -1,0 +1,60 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+)
+
+type BottomSheetBosons struct {
+	Blocked   bool
+	Sheetonly bool
+	Id        string `default:"bottomsheet"`
+}
+
+var bottomSheetStyles = hanariu.Boson{
+	"bottomSheet":    "relative w-auto h-auto",
+	"main":           "absolute inset-0 overflow-hidden",
+	"default":        "fixed inset-0 bottom-0 z-40",
+	"content":        "absolute bottom-0 shadow-xl justify-items-center justify-center items-center w-full",
+	"slideContainer": "h-auto flex flex-col bg-white dark:bg-primary-900 shadow-xl w-full m-auto",
+}
+
+func bottomSheetContent(props *BottomSheetBosons) templ.Component {
+	attrs := make(hanariu.Attrs)
+	var bind = "{['data-x-transition:enter']: 'transform transition ease-in-out duration-200 sm:duration-300',['data-x-transition:enter-start']: 'translate-y-full',['data-x-transition:enter-end']: 'translate-y-0',['data-x-transition:leave']: 'transform transition ease-in-out duration-200 sm:duration-300',['data-x-transition:leave-start']: 'translate-y-0',['data-x-transition:leave-end']: 'translate-y-full'"
+	if !props.Blocked {
+		bind += ", ['data-x-on:click.outside']() { $store.overlay.close()}"
+	}
+	bind += "}"
+	attrs["data-x-show"] = "$store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, BottomSheetBosons{}) + "'"
+	attrs["data-x-bind"] = bind
+
+	return hanariu.CreateComponent("div", bottomSheetStyles["content"], attrs, false)
+}
+
+templ BottomSheet(props *BottomSheetBosons) {
+	<div
+		data-x-data
+		data-x-bind={ "{['data-x-on:keydown.escape.window']() { $store.overlay.close() }, ['data-x-bind:class']() { $store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, BottomSheetBosons{}) + "' ? 'z-40' : '' }}" }
+		class={ bottomSheetStyles["bottomSheet"] }
+	>
+		<template data-x-teleport="body">
+			<div
+				class={ bottomSheetStyles["default"] }
+				data-x-show={ "$store.overlay.template === '" + hanariu.GetTagDefault("Id", props.Id, BottomSheetBosons{}) + "'" }
+				data-x-cloak
+			>
+				<div class={ bottomSheetStyles["main"] }>
+					if !props.Sheetonly {
+						@protons.Overlay(&protons.OverlayBosons{})
+					}
+					@bottomSheetContent(props) {
+						<div class={ bottomSheetStyles["slideContainer"] }>
+							{ children... }
+						</div>
+					}
+				</div>
+			</div>
+		</template>
+	</div>
+}

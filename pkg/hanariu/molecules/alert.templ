@@ -1,0 +1,117 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+	atoms "github.com/hanariu/hanariu/pkg/hanariu/atoms"
+	icons "github.com/hanariu/hanariu/pkg/hanariu/icons"
+)
+
+type AlertBosons struct {
+	Type         string `default:"warning"` // warning, info, success, danger
+	Title        string
+	Dismiss      bool
+	DismissTitle string `default:"Close alert"`
+	LinkMore     atoms.ButtonLinkBosons
+	LinkDetails  atoms.ButtonLinkBosons
+}
+
+var alertStyles = hanariu.Boson{
+	"default":   "relative w-full gap-3 p-4 flex flex-col sm:flex-row border rounded-md",
+	"closeBtn":  "absolute top-4 right-4 inline-flex rounded focus:outline-none focus:ring-1 focus:ring-offset-1 w-5 h-5 cursor-pointer",
+	"icon":      "flex",
+	"content":   "flex w-full flex-col",
+	"title":     "pr-8 text-sm font-semibold",
+	"msg":       "pt-1 text-sm font-normal",
+	"btns":      "mt-3 flex space-x-6",
+	"detailBtn": "cursor-pointer rounded text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2",
+	"viewBtn":   "flex cursor-pointer rounded items-center gap-1 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2",
+}
+
+var alertColorStyles = hanariu.Boson{
+	"warning": "text-warning-700 bg-warning-50 border-warning-700/60 dark:text-warning-200 dark:bg-warning-800",
+	"danger":  "text-danger-700 bg-danger-50 border-danger-700/60 dark:text-danger-200 dark:bg-danger-800",
+	"success": "text-success-700 bg-success-50 border-success-700/60 dark:text-success-200 dark:bg-success-800",
+	"info":    "text-info-700 bg-info-50 border-info-700/60 dark:text-info-200 dark:bg-info-800",
+}
+
+var alertCloseColorStyles = hanariu.Boson{
+	"warning": "text-warning-500 hover:text-warning-300 focus:ring-warning-400",
+	"danger":  "text-danger-500 hover:text-danger-300 focus:ring-danger-400",
+	"success": "text-success-500 hover:text-success-300 focus:ring-success-400",
+	"info":    "text-info-500 hover:text-info-300 focus:ring-info-400",
+}
+
+var alertButtonLinkStyles = hanariu.Boson{
+	"warning": "text-warning-700 dark:text-warning-200 no-underline hover:text-warning-800 dark:hover:text-warning-50 focus:ring-warning-500 ring-offset-warning-50 dark:ring-offset-warning-700",
+	"danger":  "text-danger-700 dark:text-danger-200 no-underline hover:text-danger-800 dark:hover:text-danger-50 focus:ring-danger-500 ring-offset-danger-50 dark:ring-offset-danger-700",
+	"success": "text-success-700 dark:text-success-200 no-underline hover:text-success-800 dark:hover:text-success-50 focus:ring-success-500 ring-offset-success-50 dark:ring-offset-success-700",
+	"info":    "text-info-700 dark:text-info-200 no-underline hover:text-info-800 dark:hover:text-info-50 focus:ring-info-500 ring-offset-info-50 dark:ring-offset-info-700",
+}
+
+templ Alert(props *AlertBosons) {
+	<div class={ alertStyles["default"] + " " + alertColorStyles[hanariu.GetTagDefault("Type", props.Type, AlertBosons{})] } data-x-show="showAlert" data-x-data="{ showAlert: true }">
+		<div class={ alertStyles["icon"] }>
+			@protons.Icon(&protons.IconBosons{
+				Size:  "sm",
+				Color: hanariu.GetTagDefault("Type", props.Type, AlertBosons{}),
+			}) {
+				switch props.Type {
+					case "info":
+						@icons.IconExclamationCircle()
+					case "success":
+						@icons.IconCheckCircle()
+					case "danger":
+						@icons.IconTimesCircle()
+					default:
+						@icons.IconExclamationTriangle()
+				}
+			}
+		</div>
+		<div class={ alertStyles["content"] }>
+			<div class={ alertStyles["title"] }>
+				{ props.Title }
+			</div>
+			<div class={ alertStyles["msg"] }>
+				{ children... }
+			</div>
+			if len(props.LinkMore.Title) > 0 || len(props.LinkDetails.Title) > 0 {
+				<div class={ alertStyles["btns"] }>
+					if len(props.LinkMore.Title) > 0 {
+						@atoms.ButtonLink(
+							&atoms.ButtonLinkBosons{
+								Color: hanariu.GetTagDefault("Type", props.Type, AlertBosons{}),
+								Size:  "sm",
+								Title: props.LinkMore.Title,
+								Attrs: props.LinkMore.Attrs,
+							},
+						)
+					}
+					if len(props.LinkDetails.Title) > 0 {
+						@atoms.ButtonLinkIcon(
+							&atoms.ButtonLinkBosons{
+								Color:   hanariu.GetTagDefault("Type", props.Type, AlertBosons{}),
+								Size:    "sm",
+								Reverse: true,
+								Title:   props.LinkDetails.Title,
+								Attrs:   props.LinkMore.Attrs,
+							},
+						) {
+							@icons.IconArrowRight()
+						}
+					}
+				</div>
+			}
+		</div>
+		if props.Dismiss {
+			<button title={ hanariu.GetTagDefault("DismissTitle", props.DismissTitle, AlertBosons{}) } class={ alertStyles["closeBtn"] + " " + alertCloseColorStyles[hanariu.GetTagDefault("Type", props.Type, AlertBosons{})] } data-x-bind="{['data-x-on:click']() { showAlert = ! showAlert }}">
+				@protons.Icon(&protons.IconBosons{
+					Size:  "full",
+					Color: "current",
+				}) {
+					@icons.IconTimes()
+				}
+			</button>
+		}
+	</div>
+}

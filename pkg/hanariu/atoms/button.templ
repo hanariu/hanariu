@@ -1,0 +1,197 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+	protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+)
+
+type ButtonBosons struct {
+	Size     string `default:"md"`
+	Color    string `default:"primary"`
+	Type     string `default:"button"`
+	Tag      string `default:"button"`
+	Rounded  bool
+	Outline  bool
+	Light    bool
+	Disabled bool
+	Icononly bool
+	Full     bool
+	Reverse  bool
+	Title    string `default:"Button"`
+	Attrs    hanariu.Attrs
+}
+
+var buttonStyles = hanariu.Boson{
+	"default":           "relative inline-flex items-center justify-center font-medium border border-solid ring-offset-secondary-50 dark:ring-offset-secondary-900",
+	"active":            "transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2",
+	"borderTransparent": "border-transparent",
+	"shadow":            "shadow-sm",
+	"outline":           "text-opacity-80 hover:text-opacity-100 hover:bg-opacity-40",
+	"rounded":           "rounded-full",
+	"square":            "rounded-md",
+	"squarexs":          "rounded",
+	"reverse":           "flex-row-reverse",
+	"full":              "w-full",
+	"disabled":          "cursor-default",
+}
+
+var buttonColorStyles = hanariu.Boson{
+	"primary":   "bg-primary-600 text-primary-100 hover:bg-primary-700 focus:ring-primary-500 dark:text-primary-100",
+	"secondary": "bg-secondary-600 text-secondary-100 hover:bg-secondary-700 focus:ring-secondary-500 dark:text-secondary-100",
+	"warning":   "bg-warning-700 text-warning-50 hover:bg-warning-800 focus:ring-warning-500 dark:text-warning-100",
+	"danger":    "bg-danger-600 text-danger-50 hover:bg-danger-700 focus:ring-danger-500 dark:text-danger-50",
+	"success":   "bg-success-700 text-success-50 hover:bg-success-800 focus:ring-success-500 dark:text-success-100",
+	"info":      "bg-info-700 text-info-50 hover:bg-info-800 focus:ring-info-500 dark:text-info-100",
+}
+
+var buttonColorDisabledStyles = hanariu.Boson{
+	"primary":   "bg-primary-300 text-primary-100/80 dark:bg-primary-800/50 dark:text-primary-500/80 dark:border-primary-800/50",
+	"secondary": "bg-secondary-300 text-secondary-100/80 dark:bg-secondary-800/50 dark:text-secondary-500/80 dark:border-secondary-800/50",
+	"warning":   "bg-warning-300 text-warning-100/80 dark:bg-warning-800/50 dark:text-warning-500/80 dark:border-warning-800/50",
+	"danger":    "bg-danger-300 text-danger-100/80 dark:bg-danger-800/50 dark:text-danger-500/80 dark:border-danger-800/50",
+	"success":   "bg-success-300 text-success-100/80 dark:bg-success-800/50 dark:text-success-500/80 dark:border-success-800/50",
+	"info":      "bg-info-300 text-info-100/80 dark:bg-info-800/50 dark:text-info-500/80 dark:border-info-800/50",
+}
+
+var buttonLightStyles = hanariu.Boson{
+	"primary":   "bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-900/40 focus:ring-primary-500",
+	"secondary": "bg-secondary-100 dark:bg-secondary-900 text-secondary-700 dark:text-secondary-200 hover:bg-secondary-200 dark:hover:bg-secondary-900/40 focus:ring-secondary-500",
+	"warning":   "bg-warning-100 dark:bg-warning-900 text-warning-700 dark:text-warning-200 hover:bg-warning-200 dark:hover:bg-warning-900/40 focus:ring-warning-500",
+	"danger":    "bg-danger-100 dark:bg-danger-900 text-danger-700 dark:text-danger-200 hover:bg-danger-200 dark:hover:bg-danger-900/40 focus:ring-danger-500",
+	"success":   "bg-success-100 dark:bg-success-900 text-success-700 dark:text-success-200 hover:bg-success-200 dark:hover:bg-success-900/40 focus:ring-success-500",
+	"info":      "bg-info-100 dark:bg-info-900 text-info-700 dark:text-info-200 hover:bg-info-200 dark:hover:bg-info-900/40 focus:ring-info-500",
+}
+
+var buttonLightDisabledStyles = hanariu.Boson{
+	"primary":   "bg-primary-50 dark:bg-primary-900/50 text-primary-600/50",
+	"secondary": "bg-secondary-50 dark:bg-secondary-900/50 text-secondary-600/50",
+	"warning":   "bg-warning-50 dark:bg-warning-900/50 text-warning-600/50",
+	"danger":    "bg-danger-50 dark:bg-danger-900/50 text-danger-600/50",
+	"success":   "bg-success-50 dark:bg-success-900/50 text-success-600/50",
+	"info":      "bg-info-50 dark:bg-info-900/50 text-info-600/50",
+}
+
+var buttonOutlineStyles = hanariu.Boson{
+	"primary":   "text-primary-700 dark:text-primary-400 hover:bg-primary-100 hover:dark:bg-primary-800/10 border-primary-600/40 dark:border-primary-500/40 focus:ring-primary-500",
+	"secondary": "text-secondary-700 dark:text-secondary-400 hover:bg-secondary-100 hover:dark:bg-secondary-800/10 border-secondary-600/40 dark:border-secondary-500/40 focus:ring-secondary-500",
+	"warning":   "text-warning-800 dark:text-warning-400 hover:bg-warning-100 hover:dark:bg-warning-800/10 border-warning-600/40 dark:border-warning-500/40 focus:ring-warning-500",
+	"danger":    "text-danger-700 dark:text-danger-400 hover:bg-danger-100 hover:dark:bg-danger-800/10 border-danger-600/40 dark:border-danger-500/40 focus:ring-danger-500",
+	"success":   "text-success-800 dark:text-success-400 hover:bg-success-100 hover:dark:bg-success-800/10 border-success-600/40 dark:border-success-500/40 focus:ring-success-500",
+	"info":      "text-info-800 dark:text-info-400 hover:bg-info-100 hover:dark:bg-info-800/10 border-info-600/40 dark:border-info-500/40 focus:ring-info-500",
+}
+
+var buttonOutlineDisabledStyles = hanariu.Boson{
+	"primary":   "text-primary-700/50 border-primary-300/40 dark:border-primary-800/40",
+	"secondary": "text-secondary-700/50 border-secondary-300/40 dark:border-secondary-800/40",
+	"warning":   "text-warning-700/50 border-warning-300/40 dark:border-warning-800/40",
+	"danger":    "text-danger-700/50 border-danger-300/40 dark:border-danger-800/40",
+	"success":   "text-success-700/50 border-success-300/40 dark:border-success-800/40",
+	"info":      "text-info-700/50 border-info-300/40 dark:border-info-800/40",
+}
+
+var buttonSizeStyles = hanariu.Boson{
+	"xs": "px-3 py-2 text-sm leading-4 md:px-2.5 md:py-1.5 md:text-xs ",
+	"sm": "px-4 py-2 text-base md:px-3 md:py-2 md:text-sm md:leading-4",
+	"md": "px-6 py-3 text-base md:px-4 md:py-2 md:text-sm",
+	"lg": "px-8 py-3 text-lg md:px-4 md:py-2 md:text-base",
+	"xl": "px-10 py-4 text-xl md:px-6 md:py-3 md:text-base",
+}
+
+var buttonSizeIconStyles = hanariu.Boson{
+	"xs": "p-1",
+	"sm": "p-1.5",
+	"md": "p-2",
+	"lg": "p-2",
+	"xl": "p-3",
+}
+
+func (attr *ButtonBosons) makeButtonAttrs() {
+	attrs := make(hanariu.Attrs)
+	for k, v := range attr.Attrs {
+		attrs[k] = v
+	}
+	attr.Attrs = attrs
+}
+
+func (prop *ButtonBosons) addButtonAttr(k, v string) {
+	prop.Attrs[k] = v
+}
+
+func ButtonButton(props *ButtonBosons) templ.Component {
+	props.Size = hanariu.GetTagDefault("Size", props.Size, ButtonBosons{})
+	props.Color = hanariu.GetTagDefault("Color", props.Color, ButtonBosons{})
+	props.Type = hanariu.GetTagDefault("Type", props.Type, ButtonBosons{})
+	props.Title = hanariu.GetTagDefault("Title", props.Title, ButtonBosons{})
+	props.makeButtonAttrs()
+	props.addButtonAttr("type", props.Type)
+	props.addButtonAttr("aria-label", props.Title)
+
+	props.Tag = hanariu.GetTagDefault("Tag", props.Tag, ButtonBosons{})
+	classes := getButtonClasses(props)
+	return hanariu.CreateComponent(props.Tag, classes, props.Attrs, false)
+}
+
+templ Button(props *ButtonBosons) {
+	@ButtonButton(props) {
+		{ props.Title }
+	}
+}
+
+templ ButtonIcon(props *ButtonBosons) {
+	@ButtonButton(props) {
+		@protons.IconButton(&protons.IconButtonBosons{Size: props.Size, Reverse: props.Reverse, Icononly: props.Icononly}) {
+			{ children... }
+		}
+		if !props.Icononly {
+			{ props.Title }
+		}
+	}
+}
+
+func getButtonClasses(props *ButtonBosons) string {
+	var buttonClasses = buttonStyles["default"]
+	if !props.Icononly && props.Reverse {
+		buttonClasses += " " + buttonStyles["reverse"]
+	}
+	if props.Icononly {
+		buttonClasses += " " + buttonSizeIconStyles[props.Size]
+	} else {
+		buttonClasses += " " + buttonSizeStyles[props.Size]
+	}
+
+	if props.Outline {
+		if props.Disabled {
+			buttonClasses += " " + buttonStyles["disabled"] + " " + buttonOutlineDisabledStyles[props.Color] + " " + buttonStyles["borderTransparent"]
+		} else {
+			buttonClasses += " " + buttonStyles["active"] + " " + buttonStyles["outline"] + " " + buttonOutlineStyles[props.Color]
+		}
+	} else if props.Light {
+		if props.Disabled {
+			buttonClasses += " " + buttonStyles["disabled"] + " " + buttonLightDisabledStyles[props.Color] + " " + buttonStyles["borderTransparent"]
+		} else {
+			buttonClasses += " " + buttonStyles["active"] + " " + buttonStyles["borderTransparent"] + " " + buttonLightStyles[props.Color]
+		}
+	} else {
+		if props.Disabled {
+			buttonClasses += " " + buttonStyles["disabled"] + " " + buttonColorDisabledStyles[props.Color]
+		} else {
+			buttonClasses += " " + buttonStyles["active"] + " " + buttonStyles["borderTransparent"] + " " + buttonStyles["shadow"] + " " + buttonColorStyles[props.Color]
+		}
+	}
+
+	if props.Rounded {
+		buttonClasses += " " + buttonStyles["rounded"]
+	} else {
+		if props.Size == "xs" {
+			buttonClasses += " " + buttonStyles["squarexs"]
+		} else {
+			buttonClasses += " " + buttonStyles["square"]
+		}
+	}
+
+	if props.Full {
+		buttonClasses += " " + buttonStyles["full"]
+	}
+
+	return buttonClasses
+}

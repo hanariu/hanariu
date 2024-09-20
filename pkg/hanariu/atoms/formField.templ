@@ -1,0 +1,32 @@
+package hanariu
+
+import (
+	"github.com/hanariu/hanariu/pkg/hanariu"
+)
+
+type FormFieldBosons struct {
+	Template string `default:"vertical"`
+	Attrs    hanariu.Attrs
+}
+
+var formFieldStyles = hanariu.Boson{
+	"default": "flex",
+}
+
+var formFieldTemplateStyles = hanariu.Boson{
+	"vertical":   "flex-col gap-1",
+	"horizontal": "gap-3 flex-row",
+	"radio":      "flex-row gap-3",
+	"toggle":     "flex-row gap-3",
+	"checkbox":   "flex-col gap-3",
+}
+
+func FormField(props *FormFieldBosons) templ.Component {
+	classes := getFormFieldClasses(props.Template)
+	return hanariu.CreateComponent("div", classes, props.Attrs, false)
+}
+
+func getFormFieldClasses(template string) string {
+	temp := hanariu.GetTagDefault("Template", template, FormFieldBosons{})
+	return formFieldStyles["default"] + " " + formFieldTemplateStyles[temp]
+}
