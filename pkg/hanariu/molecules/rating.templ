@@ -1,0 +1,17 @@
+package hanariu
+
+import atoms "github.com/hanariu/hanariu/pkg/hanariu/atoms"
+import protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+
+type RatingBosons struct {
+	Value       float64
+	IconOptions protons.IconBosons
+}
+
+templ Rating(props *RatingBosons) {
+	<div class="flex">
+		for i := range 5 {
+			@atoms.RatingStar(&atoms.RatingStarBosons{Direction: "right", Fill: props.Value - float64(i), IconOptions: props.IconOptions})
+		}
+	</div>
+}

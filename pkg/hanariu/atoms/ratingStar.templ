@@ -1,0 +1,16 @@
+package hanariu
+
+import protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
+import icons "github.com/hanariu/hanariu/pkg/hanariu/icons"
+
+type RatingStarBosons struct {
+	Fill        float64
+	Direction   string
+	IconOptions protons.IconBosons
+}
+
+templ RatingStar(props *RatingStarBosons) {
+	@protons.IconFill(&protons.IconFillBosons{Fill: props.Fill, Direction: props.Direction, Size: props.IconOptions.Size, Color: props.IconOptions.Color, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}) {
+		@icons.IconStar()
+	}
+}
