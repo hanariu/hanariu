@@ -13,7 +13,7 @@ import protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
 
 type RatingBosons struct {
 	Value       float64
-	IconOptions protons.IconBosons
+	IconOptions protons.IconFillBosons
 }
 
 func Rating(props *RatingBosons) templ.Component {

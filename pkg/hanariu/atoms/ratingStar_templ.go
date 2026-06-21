@@ -14,7 +14,7 @@ import icons "github.com/hanariu/hanariu/pkg/hanariu/icons"
 type RatingStarBosons struct {
 	Fill        float64
 	Direction   string
-	IconOptions protons.IconBosons
+	IconOptions protons.IconFillBosons
 }
 
 func RatingStar(props *RatingStarBosons) templ.Component {

@@ -7,15 +7,16 @@ import (
 
 type IconFillBosons struct {
 	Size      string `default:"md"`
-	Color     string `default:"primary"`
+	Color     string `default:"gold"`
 	ViewBox   string `default:"0 0 32 32"`
-	Direction string
+	Direction string `default:"left"`
 	Fill      float64
 	NoClass   bool
 	Attrs     hanariu.Attrs
 }
 
 var iconFillDisplayStyles = hanariu.Boson{
+	"gold":      "fill-yellow-400",
 	"current":   "fill-current",
 	"primary":   "fill-primary-600 dark:fill-primary-300",
 	"secondary": "fill-secondary-600 dark:fill-secondary-300",
@@ -58,8 +59,8 @@ func IconFill(props *IconFillBosons) templ.Component {
 }
 
 func getIconFillClasses(size, color string) string {
-	sizeIcon := hanariu.GetTagDefault("Size", size, IconBosons{})
-	colorIcon := hanariu.GetTagDefault("Color", color, IconBosons{})
+	sizeIcon := hanariu.GetTagDefault("Size", size, IconFillBosons{})
+	colorIcon := hanariu.GetTagDefault("Color", color, IconFillBosons{})
 	return iconFillDisplayStyles[colorIcon] + " " + iconFillSizeStyles[sizeIcon]
 }
 
