@@ -8,6 +8,8 @@ package hanariu
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "github.com/hanariu/hanariu/pkg/hanariu"
+
 import protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
 import icons "github.com/hanariu/hanariu/pkg/hanariu/icons"
 
@@ -38,6 +40,10 @@ func RatingStar(props *RatingStarBosons) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div class=\"relative inline-block\"><div class=\"block scale-95 origin-center\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		templ_7745c5c3_Var2 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -56,7 +62,37 @@ func RatingStar(props *RatingStarBosons) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = protons.IconFill(&protons.IconFillBosons{Fill: props.Fill, Direction: props.Direction, Size: props.IconOptions.Size, Color: props.IconOptions.Color, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = protons.Icon(&protons.IconBosons{Size: props.IconOptions.Size, Color: hanariu.GetTagDefault("BackgroundColor", props.IconOptions.BackgroundColor, protons.IconFillBosons{}), NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div><div class=\"absolute inset-0 top-0 left-0 pointer-events-none\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Var3 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+			if !templ_7745c5c3_IsBuffer {
+				defer func() {
+					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err == nil {
+						templ_7745c5c3_Err = templ_7745c5c3_BufErr
+					}
+				}()
+			}
+			ctx = templ.InitializeContext(ctx)
+			templ_7745c5c3_Err = icons.IconStar().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			return nil
+		})
+		templ_7745c5c3_Err = protons.IconFill(&protons.IconFillBosons{Fill: props.Fill, Direction: props.Direction, Size: props.IconOptions.Size, Color: props.IconOptions.Color, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

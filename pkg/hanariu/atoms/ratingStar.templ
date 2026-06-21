@@ -1,5 +1,7 @@
 package hanariu
 
+import "github.com/hanariu/hanariu/pkg/hanariu"
+
 import protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
 import icons "github.com/hanariu/hanariu/pkg/hanariu/icons"
 
@@ -10,7 +12,16 @@ type RatingStarBosons struct {
 }
 
 templ RatingStar(props *RatingStarBosons) {
-	@protons.IconFill(&protons.IconFillBosons{Fill: props.Fill, Direction: props.Direction, Size: props.IconOptions.Size, Color: props.IconOptions.Color, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}) {
-		@icons.IconStar()
-	}
+	<div class="relative inline-block ">
+		<div class="block scale-95 origin-center">
+			@protons.Icon(&protons.IconBosons{Size: props.IconOptions.Size, Color: hanariu.GetTagDefault("BackgroundColor", props.IconOptions.BackgroundColor, protons.IconFillBosons{}), NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}) {
+				@icons.IconStar()
+			}
+		</div>
+		<div class="absolute inset-0 top-0 left-0 pointer-events-none">
+			@protons.IconFill(&protons.IconFillBosons{Fill: props.Fill, Direction: props.Direction, Size: props.IconOptions.Size, Color: props.IconOptions.Color, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}) {
+				@icons.IconStar()
+			}
+		</div>
+	</div>
 }

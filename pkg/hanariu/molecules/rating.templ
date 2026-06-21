@@ -4,9 +4,27 @@ import atoms "github.com/hanariu/hanariu/pkg/hanariu/atoms"
 import protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
 
 type RatingBosons struct {
-	Description string `default:""`
-	Value       float64
-	IconOptions protons.IconFillBosons
+	Description    string `default:""`
+	DescriptionTag string `default:"span"`
+	Value          float64
+	IconOptions    protons.IconFillBosons
+}
+
+templ RatingDescription(props *RatingBosons) {
+	switch props.DescriptionTag {
+		case "span":
+			<span class="text-secondary-800 dark:text-primary-50">{ props.Description }</span>
+		case "p":
+			<p class="text-secondary-800 dark:text-primary-50">{ props.Description }</p>
+		case "h1":
+			<h1 class="text-secondary-800 dark:text-primary-50">{ props.Description }</h1>
+		case "h2":
+			<h2 class="text-secondary-800 dark:text-primary-50">{ props.Description }</h2>
+		case "h3":
+			<h3 class="text-secondary-800 dark:text-primary-50">{ props.Description }</h3>
+		case "h4":
+			<h4 class="text-secondary-800 dark:text-primary-50">{ props.Description }</h4>
+	}
 }
 
 templ Rating(props *RatingBosons) {
@@ -17,7 +35,7 @@ templ Rating(props *RatingBosons) {
 			}
 		</div>
 		if props.Description != "" {
-			<span>{ props.Description }</span>
+			@RatingDescription(props)
 		}
 	</div>
 }
