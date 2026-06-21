@@ -14,13 +14,14 @@ import (
 )
 
 type IconFillBosons struct {
-	Size      string `default:"md"`
-	Color     string `default:"gold"`
-	ViewBox   string `default:"0 0 32 32"`
-	Direction string `default:"left"`
-	Fill      float64
-	NoClass   bool
-	Attrs     hanariu.Attrs
+	Size       string `default:"md"`
+	Color      string `default:"gold"`
+	ViewBox    string `default:"0 0 32 32"`
+	Direction  string `default:"left"`
+	Transition bool
+	Fill       float64
+	NoClass    bool
+	Attrs      hanariu.Attrs
 }
 
 var iconFillDisplayStyles = hanariu.Boson{
@@ -62,7 +63,7 @@ func IconFill(props *IconFillBosons) templ.Component {
 	}
 	props.makeIconFillAttrs()
 	props.addIconFillAttr("style", getFillMask(props))
-	props.addIconFillAttr("viewbox", hanariu.GetTagDefault("ViewBox", props.ViewBox, IconBosons{}))
+	props.addIconFillAttr("viewbox", hanariu.GetTagDefault("ViewBox", props.ViewBox, IconFillBosons{}))
 	return hanariu.CreateComponent("svg", classes, props.Attrs, false)
 }
 
@@ -75,8 +76,17 @@ func getIconFillClasses(size, color string) string {
 func getFillMask(props *IconFillBosons) string {
 	percent := int(max(min(props.Fill, 1), 0) * 100)
 	// Using longhand properties to ensure mask-size and mask-repeat are applied correctly
-	return fmt.Sprintf(
-		"mask-image: linear-gradient(to %s, black %d%%, transparent %d%%); mask-repeat: no-repeat; mask-size: 100%% 100%%;", props.Direction, percent, percent)
+	mask := fmt.Sprintf(
+		`mask-image: linear-gradient(to %s, black, black); 
+		 mask-repeat: no-repeat; 
+		 mask-size: %d%% 100%%;`,
+		props.Direction, percent)
+
+	if props.Transition {
+		mask += " transition: mask-size 400ms ease-in-out;"
+	}
+
+	return mask
 }
 
 var _ = templruntime.GeneratedTemplate
