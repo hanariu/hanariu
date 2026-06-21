@@ -6,14 +6,13 @@ import (
 )
 
 type IconFillBosons struct {
-	Size       string `default:"md"`
-	Color      string `default:"gold"`
-	ViewBox    string `default:"0 0 32 32"`
-	Direction  string `default:"left"`
-	Transition bool
-	Fill       float64
-	NoClass    bool
-	Attrs      hanariu.Attrs
+	Size      string `default:"md"`
+	Color     string `default:"gold"`
+	ViewBox   string `default:"0 0 32 32"`
+	Direction string `default:"left"`
+	Fill      float64
+	NoClass   bool
+	Attrs     hanariu.Attrs
 }
 
 var iconFillDisplayStyles = hanariu.Boson{
@@ -72,10 +71,6 @@ func getFillMask(props *IconFillBosons) string {
 		 mask-repeat: no-repeat; 
 		 mask-size: %d%% 100%%;`,
 		props.Direction, percent)
-
-	if props.Transition {
-		mask += " transition: mask-size 400ms ease-in-out;"
-	}
 
 	return mask
 }
