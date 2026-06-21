@@ -54,7 +54,7 @@ func IconFill(props *IconFillBosons) templ.Component {
 	}
 	props.makeIconFillAttrs()
 	props.addIconFillAttr("style", getFillMask(props))
-	props.addIconFillAttr("viewbox", hanariu.GetTagDefault("ViewBox", props.ViewBox, IconBosons{}))
+	props.addIconFillAttr("viewbox", hanariu.GetTagDefault("ViewBox", props.ViewBox, IconFillBosons{}))
 	return hanariu.CreateComponent("svg", classes, props.Attrs, false)
 }
 
