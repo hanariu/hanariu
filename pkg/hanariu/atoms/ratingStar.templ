@@ -10,7 +10,7 @@ type RatingStarBosons struct {
 }
 
 templ RatingStar(props *RatingStarBosons) {
-	@protons.IconFill(&protons.IconFillBosons{Fill: props.Fill, Direction: props.Direction, Size: props.IconOptions.Size, Color: props.IconOptions.Color, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs, Transition: props.IconOptions.Transition}) {
+	@protons.IconFill(&protons.IconFillBosons{Fill: props.Fill, Direction: props.Direction, Size: props.IconOptions.Size, Color: props.IconOptions.Color, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}) {
 		@icons.IconStar()
 	}
 }
