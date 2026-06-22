@@ -1,41 +1,54 @@
 package hanariu
 
+import "github.com/hanariu/hanariu/pkg/hanariu"
+
 import atoms "github.com/hanariu/hanariu/pkg/hanariu/atoms"
 import protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
 
 type RatingBosons struct {
-	Description    string `default:""`
-	DescriptionTag string `default:"span"`
-	Value          float64
-	IconOptions    protons.IconFillBosons
+	Description      string `default:""`
+	DescriptionTag   string `default:"span"`
+	DescriptionStyle string `default:"secondary"`
+	DescriptionSize  string `default:"md"`
+	BackgroundColor  string `default:"current"`
+	Value            float64
+	IconOptions      protons.IconFillBosons
 }
 
-templ RatingDescription(props *RatingBosons) {
-	switch props.DescriptionTag {
-		case "span":
-			<span class="text-secondary-800 dark:text-primary-50">{ props.Description }</span>
-		case "p":
-			<p class="text-secondary-800 dark:text-primary-50">{ props.Description }</p>
-		case "h1":
-			<h1 class="text-secondary-800 dark:text-primary-50">{ props.Description }</h1>
-		case "h2":
-			<h2 class="text-secondary-800 dark:text-primary-50">{ props.Description }</h2>
-		case "h3":
-			<h3 class="text-secondary-800 dark:text-primary-50">{ props.Description }</h3>
-		case "h4":
-			<h4 class="text-secondary-800 dark:text-primary-50">{ props.Description }</h4>
-	}
+var descriptionStyles = hanariu.Boson{
+	"primary":   "text-primary-800 dark:text-primary-200",
+	"secondary": "text-secondary-800 dark:text-secondary-200",
+	"warning":   "text-warning-800 dark:text-warning-200",
+	"danger":    "text-danger-800 dark:text-danger-200",
+	"success":   "text-success-800 dark:text-success-200",
+	"info":      "text-info-800 dark:text-info-200",
+}
+
+var DescriptionSizes = hanariu.Boson{
+	"xs": "text-xs",
+	"sm": "text-sm",
+	"md": "text-base",
+	"lg": "text-lg",
+	"xl": "text-xl",
+}
+
+func RatingDescription(props *RatingBosons) templ.Component {
+	descriptionStyle := hanariu.GetTagDefault("DescriptionStyle", props.DescriptionStyle, RatingBosons{})
+	descriptionSize := hanariu.GetTagDefault("DescriptionSize", props.DescriptionSize, RatingBosons{})
+	return hanariu.CreateComponent(hanariu.GetTagDefault("DescriptionTag", props.DescriptionTag, RatingBosons{}), descriptionStyles[descriptionStyle]+" "+DescriptionSizes[descriptionSize], nil, false)
 }
 
 templ Rating(props *RatingBosons) {
 	<div>
 		<div class="flex">
 			for i := range 5 {
-				@atoms.RatingStar(&atoms.RatingStarBosons{Direction: "right", Fill: props.Value - float64(i), IconOptions: props.IconOptions})
+				@atoms.RatingStar(&atoms.RatingStarBosons{Fill: props.Value - float64(i), IconOptions: props.IconOptions, BackgroundColor: hanariu.GetTagDefault("BackgroundColor", props.BackgroundColor, RatingBosons{})})
 			}
 		</div>
 		if props.Description != "" {
-			@RatingDescription(props)
+			@RatingDescription(props) {
+				{ props.Description }
+			}
 		}
 	</div>
 }

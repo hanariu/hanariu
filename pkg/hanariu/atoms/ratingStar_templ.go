@@ -8,15 +8,13 @@ package hanariu
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "github.com/hanariu/hanariu/pkg/hanariu"
-
 import protons "github.com/hanariu/hanariu/pkg/hanariu/protons"
 import icons "github.com/hanariu/hanariu/pkg/hanariu/icons"
 
 type RatingStarBosons struct {
-	Fill        float64
-	Direction   string
-	IconOptions protons.IconFillBosons
+	Fill            float64
+	BackgroundColor string
+	IconOptions     protons.IconFillBosons
 }
 
 func RatingStar(props *RatingStarBosons) templ.Component {
@@ -62,7 +60,7 @@ func RatingStar(props *RatingStarBosons) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = protons.Icon(&protons.IconBosons{Size: props.IconOptions.Size, Color: hanariu.GetTagDefault("BackgroundColor", props.IconOptions.BackgroundColor, protons.IconFillBosons{}), NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = protons.Icon(&protons.IconBosons{Size: props.IconOptions.Size, Color: props.BackgroundColor, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -88,7 +86,7 @@ func RatingStar(props *RatingStarBosons) templ.Component {
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = protons.IconFill(&protons.IconFillBosons{Fill: props.Fill, Direction: props.Direction, Size: props.IconOptions.Size, Color: props.IconOptions.Color, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = protons.IconFill(&protons.IconFillBosons{Fill: props.Fill, Direction: props.IconOptions.Direction, Size: props.IconOptions.Size, Color: props.IconOptions.Color, NoClass: props.IconOptions.NoClass, ViewBox: props.IconOptions.ViewBox, Attrs: props.IconOptions.Attrs}).Render(templ.WithChildren(ctx, templ_7745c5c3_Var3), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
